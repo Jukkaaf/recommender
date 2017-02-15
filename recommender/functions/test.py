@@ -5,6 +5,7 @@ def testfunction():
     text = ""
     try:
         con = mdb.connect('host', 'user', 'password', 'database');
+        #con = mdb.connect("localhost", "root", "", "recommender")
 
         cur = con.cursor()
         cur.execute("SELECT VERSION()")

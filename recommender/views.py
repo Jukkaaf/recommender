@@ -24,4 +24,4 @@ def collab_filter(request):
     return {'result': result,
             'params': params,
             'action': request.matchdict.get('action'),
-            }
+}
