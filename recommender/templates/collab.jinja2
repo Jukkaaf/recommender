@@ -1,0 +1,18 @@
+{% extends "layout.jinja2" %} 
+
+{% block content%}
+<div class="content">
+    <form action="{{request.route_path('collab_action', action='filter')}}" method="post" enctype="multipart/form-data">
+        <label for="User-ID">User-ID:</label>
+        <input type="text" name="User-ID">
+        <label for="ISBN">ISBN:</label>
+        <input type="text" name="ISBN">
+        <input type="submit" id="filter" value="filter">
+    </form>
+
+    {% if action == 'filter' %}
+        <p class="lead">{{result}}</p>
+        <p class="lead">{{params}}</p>
+    {% endif %}
+</div>
+{% endblock content %}
