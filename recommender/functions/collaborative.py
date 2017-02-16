@@ -1,6 +1,4 @@
 import MySQLdb as mysli
-#Using numpy
-import numpy as np
 
 def collaborativeFiltering(userid, isbn):
 
@@ -73,7 +71,3 @@ def collaborativeFiltering(userid, isbn):
 
             except mysli.Error as err:
                 print err"""
-
-
-    books = ["testikirja1", "testikirja2"]
-    return books
