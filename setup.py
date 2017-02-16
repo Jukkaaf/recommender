@@ -12,7 +12,8 @@ requires = [
     'pyramid',
     'pyramid_jinja2',
     'pyramid_debugtoolbar',
-    'waitress', 'MySQLdb',
+    'waitress',
+    'MySQL-Python',
     ]
 
 tests_require = [
