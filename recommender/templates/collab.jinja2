@@ -1,4 +1,4 @@
-{% extends "layout.jinja2" %} 
+{% extends "layout.jinja2" %}
 
 {% block content%}
 <div class="content">
@@ -11,8 +11,12 @@
     </form>
 
     {% if action == 'filter' %}
-        <p class="lead">{{result}}</p>
-        <p class="lead">{{params}}</p>
+        {% for book in result %}
+            <p class="lead">Recommending book ISBN: {{book}}</p>
+        {% endfor %}
     {% endif %}
+
+    <p>198711, 0930330668</p>
+    <p>97694, 0440236983</p>
 </div>
 {% endblock content %}
