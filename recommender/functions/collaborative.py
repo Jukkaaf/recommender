@@ -8,7 +8,7 @@ def collaborativeFiltering(userid, isbn):
     cursor = db.cursor()
 
     #Kaikki arvostelut kirjasta
-    arv_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `ISBN`=%s ORDER BY `Book-Rating` DESC" % isbn
+    arv_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `ISBN`='%s' ORDER BY `Book-Rating` DESC" % isbn
 
     #Kayttaja, joka on antanut parhaan arvion kirjalle
     kirjat = []
@@ -20,10 +20,10 @@ def collaborativeFiltering(userid, isbn):
             while len(kirjat) < 1:
                 tekija = arvostelu[0]
                 #Haetaan tekijan tekemat arvostelue
-                tek_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `User-ID`=%d ORDER BY `Book-Rating` DESC" % (tekija)
+                tek_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `User-ID`='%d' ORDER BY `Book-Rating` DESC" % (tekija)
                 cursor.execute(tek_sql)
                 tekijan_arvostelut = cursor.fetchall()
-                cursor.execute("SELECT COUNT(*) FROM `BX-Book-Ratings` WHERE `User-ID`=%d" % (tekija))
+                cursor.execute("SELECT COUNT(*) FROM `BX-Book-Ratings` WHERE `User-ID`='%d'" % (tekija))
                 maara = cursor.fetchone()[0]
                 if (maara > 0):
                     kirjat.append(tekijan_arvostelut[0][1])
