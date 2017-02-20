@@ -1,9 +1,6 @@
 import MySQLdb as mysli
 
-def collaborativeFiltering(userid, isbn):
-
-    #Yhteys tietokantaan, localhost, mulla kayttaja = root, salasana = "", tietokannan nimi = reommender
-    db = mysli.connect('localhost', 'root', '', 'recommender')
+def collaborativeFiltering(userid, isbn, db):
 
     cursor = db.cursor()
 
