@@ -1,69 +1,57 @@
 import MySQLdb as mysli
+import pandas as pd
+#from scipy.stats import pearsonr
 
 def collaborativeFiltering(userid, isbn, db):
 
     cursor = db.cursor()
 
-    #Kaikki arvostelut kirjasta
-    arv_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `ISBN`='%s' ORDER BY `Book-Rating` DESC" % isbn
-
-    #Kayttaja, joka on antanut parhaan arvion kirjalle
-    kirjat = []
-
+    #All ratings about the book
+    arv_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `ISBN`='%s' AND NOT `User-ID`=%s" % (isbn,userid)
     try:
         cursor.execute(arv_sql)
-        arvostelut = cursor.fetchall()
-        for arvostelu in arvostelut:
-            while len(kirjat) < 1:
-                tekija = arvostelu[0]
-                #Haetaan tekijan tekemat arvostelue
-                tek_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `User-ID`='%d' ORDER BY `Book-Rating` DESC" % (tekija)
-                cursor.execute(tek_sql)
-                tekijan_arvostelut = cursor.fetchall()
-                cursor.execute("SELECT COUNT(*) FROM `BX-Book-Ratings` WHERE `User-ID`='%d'" % (tekija))
-                maara = cursor.fetchone()[0]
-                if (maara > 0):
-                    kirjat.append(tekijan_arvostelut[0][1])
+        ratings_of_the_book = cursor.fetchall()
 
     except mysli.Error as err:
         print err
 
-    return kirjat
+    # Finding other users that have rated the book
+    other_users_that_have_rated = {}
+    print ratings_of_the_book
+    for row in ratings_of_the_book:
+        other_user = row[0]
+        other_rating = row[2]
+        other_users_that_have_rated[other_user] = other_rating
 
-    """"Alkuperainen hahmotelma laskemiselle
-    user_sql = "SELECT * FROM `bx-book-ratings` WHERE `User-ID`=%d" % userid
-    #Arvostelujen maara
-    maara_sql = "SELECT COUNT(`ISBN`) FROM `bx-book-ratings` WHERE `User-ID`=%d" % userid
 
-    print "rolo"
+    rewiews_by_user_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `User-ID`=%s" % userid
     try:
-        cursor.execute(user_sql)
-        kayttajan_arvostelut = cursor.fetchall()
+        cursor.execute(rewiews_by_user_sql)
+        rewiews_by_user = cursor.fetchall()
+
 
     except mysli.Error as err:
         print err
 
+    matrix = pd.DataFrame()
 
+    for other_user in other_users_that_have_rated:
+        reviews_by_other_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `User-ID`=%s" % other_user
+        try:
+            cursor.execute(reviews_by_other_sql)
+            reviews_by_the_other = cursor.fetchall()
+            """Selecting the reviews of others users, that have rated at least one common book with the user
+            for book_other in reviews_by_the_other[:2]:
+                for book in rewiews_by_user[:2]:
+                    if book_other is book is not  isbn:"""
+            for review in reviews_by_the_other:
+                    book_isbn = review[1]
+                    rating = review[2]
+                    """print review
+                    print 'uli'
+                    print rating"""
+                    new_key = {book_isbn: rating}
+                    matrix.loc[-1] = new_key
 
-    for arvostelu in kayttajan_arvostelut:
-
-        kirja = arvostelu[1]
-
-        if kirja is not isbn:
-
-            #Muiden ratingit kyseista kirjasta
-            rat_sql = "SELECT * FROM `bx-book-ratings` WHERE `ISBN` =%d ORDER BY `Book-Rating` DESCENDING" % isbn
-
-            similarity = 0
-
-            try:
-                cursor.execute(rat_sql)
-                arvostelut_kirjasta = cursor.fetchone()
-
-                for arvostelu in arvostelut_kirjasta:
-                    toisen_arvosana = arvostelu[2]
-                    #KESKEN
-
-
-            except mysli.Error as err:
-                print err"""
+        except mysli.Error as err:
+            print err
