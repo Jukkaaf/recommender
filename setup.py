@@ -14,6 +14,7 @@ requires = [
     'pyramid_debugtoolbar',
     'waitress',
     'MySQL-Python',
+    'pandas',
     ]
 
 tests_require = [

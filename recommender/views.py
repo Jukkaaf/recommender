@@ -1,6 +1,6 @@
 from pyramid.view import view_config
 from functions.test import testfunction
-from functions.collaborative import collaborativeFiltering
+from functions.collaborative import collaborativeFiltering, bookInfo
 import MySQLdb as mysli
 
 @view_config(route_name='home', renderer='templates/mytemplate.jinja2')
@@ -25,8 +25,14 @@ def collab_filter(request):
     settings = request.registry.settings
     db = mysli.connect(settings['mysql.host'], settings['mysql.user'], settings['mysql.password'], settings['mysql.database'])
 
-    result = collaborativeFiltering(params["User-ID"].encode("utf-8"), params["ISBN"].encode("utf-8"), db)
-    return {'result': result,
-            'params': params,
+    #result = collaborativeFiltering(params["User-ID"].encode("utf-8"), params["ISBN"].encode("utf-8"), db)
+
+    selectedBook = bookInfo(params["ISBN"].encode("utf-8"), db)
+    #temp isbn, vaihda result
+    recommendedBook = bookInfo("0446310786", db)
+
+    return {'params': params,
             'action': request.matchdict.get('action'),
+            'selectedBook': selectedBook,
+            'recommendedBook': recommendedBook
 }

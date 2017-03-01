@@ -3,20 +3,35 @@
 {% block content%}
 <div class="content">
     <form action="{{request.route_path('collab_action', action='filter')}}" method="post" enctype="multipart/form-data">
-        <label for="User-ID">User-ID:</label>
+        <label for="User-ID">Logged in as user:</label>
         <input type="text" name="User-ID" value="276747">
-        <label for="ISBN">ISBN:</label>
+        <br>
+        <label for="ISBN">Viewing the book:</label>
         <input type="text" name="ISBN" value="0060517794">
         <input type="submit" id="filter" value="filter">
     </form>
 
-    {% if action == 'filter' %}
-        {% for book in result %}
-            <p class="lead">Recommending book ISBN: {{book}}</p>
-        {% endfor %}
-    {% endif %}
+    <hr>
 
-    <p>198711, 0930330668</p>
-    <p>97694, 0440236983</p>
+    {% if action == 'filter' %}
+        <h2>{{ selectedBook['Book-Title'] }}</h2>
+
+        <img src={{ selectedBook['Image-URL-M'] }} alt="bookcover">
+        <p>{{ selectedBook['Book-Author'] }}</p>
+        <p>{{ selectedBook['Year-Of-Publication'] }}</p>
+        <p>{{ selectedBook['Publisher'] }}</p>
+
+        <hr>
+
+        <h2>Book recommended to you</h2>
+        <h3>{{ recommendedBook['Book-Title'] }}</h3>
+
+        <img src={{ recommendedBook['Image-URL-M'] }} alt="bookcover">
+        <p>{{ recommendedBook['Book-Author'] }}</p>
+        <p>{{ recommendedBook['Year-Of-Publication'] }}</p>
+        <p>{{ recommendedBook['Publisher'] }}</p>
+
+
+    {% endif %}
 </div>
 {% endblock content %}

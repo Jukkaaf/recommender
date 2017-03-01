@@ -55,3 +55,22 @@ def collaborativeFiltering(userid, isbn, db):
 
         except mysli.Error as err:
             print err
+
+
+def bookInfo(isbn, db):
+    cursor = db.cursor()
+    arv_sql = "SELECT * FROM `BX-Books` WHERE `ISBN`='%s'" % (isbn)
+    try:
+        cursor.execute(arv_sql)
+        book = cursor.fetchall()
+    except mysli.Error as err:
+        print err
+    info = {}
+    for row in book:
+        info['Book-Title'] = row[1]
+        info['Book-Author'] = row[2]
+        info['Year-Of-Publication'] = row[3]
+        info['Publisher'] = row[4]
+        info['Image-URL-M'] = row[6]
+
+    return info
