@@ -17,7 +17,6 @@ def collaborativeFiltering(userid, isbn, db):
 
     # Finding other users that have rated the book
     other_users_that_have_rated = {}
-    print ratings_of_the_book
     for row in ratings_of_the_book:
         other_user = row[0]
         other_rating = row[2]
@@ -34,27 +33,30 @@ def collaborativeFiltering(userid, isbn, db):
         print err
 
     matrix = pd.DataFrame()
+    #Adding current user to matrix
+
 
     for other_user in other_users_that_have_rated:
         reviews_by_other_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `User-ID`=%s" % other_user
         try:
             cursor.execute(reviews_by_other_sql)
             reviews_by_the_other = cursor.fetchall()
+            print reviews_by_the_other
             """Selecting the reviews of others users, that have rated at least one common book with the user
             for book_other in reviews_by_the_other[:2]:
                 for book in rewiews_by_user[:2]:
                     if book_other is book is not  isbn:"""
+            matrix.append({other_user: []})
             for review in reviews_by_the_other:
                     book_isbn = review[1]
                     rating = review[2]
                     """print review
                     print 'uli'
                     print rating"""
-                    new_key = {book_isbn: rating}
-                    matrix.loc[-1] = new_key
-
+                    matrix.loc[other_user].append({book_isbn: rating})
         except mysli.Error as err:
             print err
+
 
 
 def bookInfo(isbn, db):
