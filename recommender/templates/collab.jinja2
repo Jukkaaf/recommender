@@ -31,7 +31,14 @@
         <p>{{ recommendedBook['Year-Of-Publication'] }}</p>
         <p>{{ recommendedBook['Publisher'] }}</p>
 
+    {% else %}
+        <h2>Cold start recommendation. A book from the top 10%</h2>
+        <h3>{{ coldbookinfo['Book-Title'] }}</h3>
 
+        <img src={{ coldbookinfo['Image-URL-M'] }} alt="bookcover">
+        <p>{{ coldbookinfo['Book-Author'] }}</p>
+        <p>{{ coldbookinfo['Year-Of-Publication'] }}</p>
+        <p>{{ coldbookinfo['Publisher'] }}</p>
     {% endif %}
 </div>
 {% endblock content %}
