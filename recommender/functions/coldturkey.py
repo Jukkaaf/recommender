@@ -3,22 +3,28 @@ from random import randint
 
 def coldturkey(db):
     cursor = db.cursor()
-    arv_sql = "SELECT `ISBN` FROM `BX-Book-Ratings` WHERE `Book-Rating`='10'"
+    arv_sql = "SELECT `*` FROM `BX-Book-Ratings`"
     try:
         cursor.execute(arv_sql)
         books = cursor.fetchall()
     except mysli.Error as err:
         print err
 
-    counter =  {}
+    score = {}
+    ammount = {}
 
     for book in books:
-        if book[0] in counter:
-            counter[book[0]] += 1
+        if book[0] in ammount:
+            ammount[book[1]] += 1
+            score[book[1]] += int(book[2])
         else:
-            counter[book[0]] = 1
+            ammount[book[1]] = 1
+            score[book[1]] = int(book[2])
+    points = {}
+    for book in ammount:
+        points[book] = score[book] / ammount[book]
 
-    ordcounter = sorted(counter, key=counter.get, reverse=True)
+    ordcounter = sorted(points, key=points.get, reverse=True)
     split = int(len(ordcounter) * 0.1)
 
     top = ordcounter[:split]
