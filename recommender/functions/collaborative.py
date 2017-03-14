@@ -61,23 +61,31 @@ def collaborativeFiltering(userid, isbn, db):
     coefficients = {}
     for other_user in dictionary:
         coefficient = coef_similarity(rewiews_by_user,dictionary[other_user])
+        print coefficient
         #print dictionary[other_user]
         coefficients[other_user] = coefficient
 
     coefficients = sorted(coefficients.items(), key=lambda x :x[1])
     #Taking the highest rated book a the most similar user
-    #Todo, returning a few books
-    highest_rated_isbn = None
-    most_similar_user = coefficients[:1][0][0]
-    #print most_similar_user
-    for ISBN in dictionary[most_similar_user]:
-        rating = dictionary[most_similar_user][ISBN]
-        #Checking it is not the same book
-        if rating > highest_rated_isbn and ISBN != isbn:
-            highest_rated_isbn = ISBN
+    highest_rated_isbns = []
+    number_of_similar_users = len(coefficients)
+    #Number of reviews that must be done will be
+    limit_of_books = 50
+    number_of_books = 0
+
+    for i,similar_user in enumerate(coefficients[0]):
+        # going at most half of the similar users
+        half_of_users = number_of_similar_users/2
+        if i <= half_of_users and number_of_books <= limit_of_books and similar_user in dictionary:
+            for ISBN in dictionary[similar_user]:
+                #print ISBN
+                rating = dictionary[similar_user][ISBN]
+                #Checking it is not the same book
+                if rating >= 5 and ISBN != isbn:
+                    highest_rated_isbns.append(ISBN)
 
 
-    return highest_rated_isbn
+    return highest_rated_isbns
 
 
 
@@ -116,19 +124,3 @@ def coef_similarity(a_reviews,b_reviews):
     corr = np.corrcoef(reviews_a,reviews_b)
     #print corr
     return corr[1,0]
-    """mean_a = (sum(a_reviews.values()))/(len(a_reviews))
-    mean_b = (sum(b_reviews.values()))/(len(b_reviews))
-    covariance = 0
-    pow_sum_a = 0
-    pow_sum_b = 0
-    for item_a in a_reviews:
-        for item_b in b_reviews:
-            if item_a == item_b:
-                rating_a = a_reviews[item_a]
-                rating_b = b_reviews[item_a]
-                covariance += (rating_a-mean_a)*(rating_b-mean_b)
-                pow_sum_a += (rating_a-mean_a)**2
-                pow_sum_b += (rating_b - mean_b) ** 2
-    if pow_sum_a == 0  or pow_sum_b == 0:
-        return 0
-    return covariance/ ( sqrt(pow_sum_a) * sqrt(pow_sum_b) )"""

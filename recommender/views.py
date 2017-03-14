@@ -37,11 +37,13 @@ def collab_filter(request):
     settings = request.registry.settings
     db = mysli.connect(settings['mysql.host'], settings['mysql.user'], settings['mysql.password'], settings['mysql.database'])
 
-    #result = collaborativeFiltering(params["User-ID"].encode("utf-8"), params["ISBN"].encode("utf-8"), db)
+    result = collaborativeFiltering(params["User-ID"].encode("utf-8"), params["ISBN"].encode("utf-8"), db)
 
     selectedBook = bookInfo(params["ISBN"].encode("utf-8"), db)
     #temp isbn, vaihda result
     recommendedBook = bookInfo("0446310786", db)
+    if len(result) > 0:
+        recommendedBook = bookInfo(result[0],db)
 
     return {'params': params,
             'action': request.matchdict.get('action'),
