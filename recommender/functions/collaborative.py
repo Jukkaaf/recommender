@@ -98,7 +98,6 @@ def bookInfo(isbn, db):
         cursor.execute(arv_sql)
         book = cursor.fetchall()
         for row in book:
-            info['Book-ISBN'] = row[0]
             info['Book-Title'] = row[1]
             info['Book-Author'] = row[2]
             info['Year-Of-Publication'] = row[3]

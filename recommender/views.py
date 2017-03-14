@@ -70,6 +70,7 @@ def select_book(request):
                 #Tassa voi tulla UnicodeDecodeError ja kyseista kirjaa ei panna top_booksiin
                 info['Book-Title'] = info['Book-Title'].encode('utf-8')
                 top_books[isbn] = bookInfo(isbn, db)
+                top_books[isbn]['Book-ISBN'] = isbn
             except UnicodeDecodeError:
                 pass
 
