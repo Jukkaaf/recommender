@@ -1,7 +1,7 @@
 import MySQLdb as mysli
 from random import randint
 
-def coldturkey(db):
+def coldturkey(db,return_all_books = False):
     cursor = db.cursor()
     arv_sql = "SELECT `*` FROM `BX-Book-Ratings`"
     try:
@@ -26,7 +26,9 @@ def coldturkey(db):
 
     ordcounter = sorted(points, key=points.get, reverse=True)
     split = int(len(ordcounter) * 0.1)
-
     top = ordcounter[:split]
 
-    return top[randint(0,split-1)]
+    if return_all_books:
+        return top
+    else:
+        return top[randint(0,split-1)]

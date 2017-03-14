@@ -50,3 +50,29 @@ def collab_filter(request):
             'selectedBook': selectedBook,
             'recommendedBook': recommendedBook
             }
+@view_config(route_name='select_book',renderer='templates/select_book.jinja2')
+def select_book(request):
+    parameters = request.POST
+
+    settings = request.registry.settings
+    db = mysli.connect(settings['mysql.host'], settings['mysql.user'], settings['mysql.password'],
+                       settings['mysql.database'])
+    return_all_books = True
+    top_books_isbns = coldturkey(db,return_all_books)
+
+    top_books = {}
+    for isbn in top_books_isbns:
+        #Isbn 84.02.05006.9 aiheuttaa sql-virheen (1064, "You have an error in your...
+        info = bookInfo(isbn,db)
+        if info:
+            try:
+                #Jos kirjan nimessa on ei-ascii-merkkeja, tulostettaessa tulee error: UnicodeDecodeError: 'ascii' codec can't decode byte...
+                #Tassa voi tulla UnicodeDecodeError ja kyseista kirjaa ei panna top_booksiin
+                info['Book-Title'] = info['Book-Title'].encode('utf-8')
+                top_books[isbn] = bookInfo(isbn, db)
+            except UnicodeDecodeError:
+                pass
+
+
+    return{'action': request.matchdict.get('action'),
+           'top_books': top_books}

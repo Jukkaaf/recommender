@@ -12,5 +12,6 @@ def main(global_config, **settings):
     config.add_route('test', '/test')
     config.add_route('collab', '/collab')
     config.add_route('collab_action', '/collab/{action}')
+    config.add_route('select_book','/select_book')
     config.scan()
     return config.make_wsgi_app()

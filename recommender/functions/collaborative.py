@@ -73,16 +73,17 @@ def collaborativeFiltering(userid, isbn, db):
     limit_of_books = 50
     number_of_books = 0
 
-    for i,similar_user in enumerate(coefficients[0]):
-        # going at most half of the similar users
-        half_of_users = number_of_similar_users/2
-        if i <= half_of_users and number_of_books <= limit_of_books and similar_user in dictionary:
-            for ISBN in dictionary[similar_user]:
-                #print ISBN
-                rating = dictionary[similar_user][ISBN]
-                #Checking it is not the same book
-                if rating >= 5 and ISBN != isbn:
-                    highest_rated_isbns.append(ISBN)
+    if len(coefficients) > 0:
+        for i,similar_user in enumerate(coefficients[0]):
+            # going at most half of the similar users
+            half_of_users = number_of_similar_users/2
+            if i <= half_of_users and number_of_books <= limit_of_books and similar_user in dictionary:
+                for ISBN in dictionary[similar_user]:
+                    #print ISBN
+                    rating = dictionary[similar_user][ISBN]
+                    #Checking it is not the same book
+                    if rating >= 5 and ISBN != isbn:
+                        highest_rated_isbns.append(ISBN)
 
 
     return highest_rated_isbns
@@ -92,18 +93,21 @@ def collaborativeFiltering(userid, isbn, db):
 def bookInfo(isbn, db):
     cursor = db.cursor()
     arv_sql = "SELECT * FROM `BX-Books` WHERE `ISBN`='%s'" % (isbn)
+    info = {}
     try:
         cursor.execute(arv_sql)
         book = cursor.fetchall()
+        for row in book:
+            info['Book-ISBN'] = row[0]
+            info['Book-Title'] = row[1]
+            info['Book-Author'] = row[2]
+            info['Year-Of-Publication'] = row[3]
+            info['Publisher'] = row[4]
+            info['Image-URL-M'] = row[6]
     except mysli.Error as err:
         print err
-    info = {}
-    for row in book:
-        info['Book-Title'] = row[1]
-        info['Book-Author'] = row[2]
-        info['Year-Of-Publication'] = row[3]
-        info['Publisher'] = row[4]
-        info['Image-URL-M'] = row[6]
+
+
 
     return info
 
