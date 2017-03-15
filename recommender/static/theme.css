@@ -45,17 +45,18 @@ p {
 
 .book-box{
   border-color: black;
-  border: 10px;
+  border-style: solid;
+  border-width: 0.5px;
   height: 100px;
 }
 .book-box p{
-  font-size: 0.1em;
+  font-size: 5em;
   font-weight: unset;
 }
 .book-box img{
   alignment: right;
-  height: 50%;
-  width: 50%;
+  height: 100px;
+  width: auto;
 }
 
 
