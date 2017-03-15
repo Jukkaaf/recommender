@@ -1,0 +1,33 @@
+{% extends "layout.jinja2" %}
+
+
+{% block content %}
+    <div class="content">
+
+    {% if action == 'filter' %}
+        <h2>Recommended for you:</h2>
+        {% for book in allRecommendedBooks %}
+
+            <div class="book-box">
+                <p>{{ allRecommendedBooks[book]['Book-Title'] }}</p>
+
+                <img src="{{ allRecommendedBooks[book]['Image-URL-M'] }}" alt="book cover" width=100 height=100>
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+        <h2>Cold start recommendation. A book from the top 10%</h2>
+        <h3>{{ coldbookinfo['Book-Title'] }}</h3>
+
+        <img src={{ coldbookinfo['Image-URL-M'] }} alt="bookcover">
+        <p>{{ coldbookinfo['Book-Author'] }}</p>
+        <p>{{ coldbookinfo['Year-Of-Publication'] }}</p>
+        <p>{{ coldbookinfo['Publisher'] }}</p>
+    {% endif %}
+
+    </div>
+
+
+
+{% endblock content %}

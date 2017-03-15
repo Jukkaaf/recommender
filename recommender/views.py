@@ -3,6 +3,7 @@ from functions.test import testfunction
 from functions.collaborative import collaborativeFiltering, bookInfo
 from functions.randomi import random_book
 from functions.coldturkey import coldturkey
+from collections import OrderedDict
 import MySQLdb as mysli
 
 @view_config(route_name='home', renderer='templates/mytemplate.jinja2')
@@ -30,7 +31,8 @@ def collab(request):
             'coldbookinfo': coldbookinfo
             }
 
-@view_config(route_name='collab_action', match_param='action=filter', renderer='templates/collab.jinja2')
+#                                                                Muutettu collab.jinja -> collab2.jinja
+@view_config(route_name='collab_action', match_param='action=filter', renderer='templates/collab2.jinja2')
 def collab_filter(request):
     params = request.POST
 
@@ -45,10 +47,22 @@ def collab_filter(request):
     if len(result) > 0:
         recommendedBook = bookInfo(result[0],db)
 
+    #Kaikkien kirjojen palautus
+    allRecommendedBooks = OrderedDict()
+    for isbn in result:
+        info = bookInfo(isbn,db)
+        if info:
+            try:
+                info['Book-Title'] = info['Book-Title'].encode('utf-8')
+                allRecommendedBooks[isbn] = info
+            except UnicodeDecodeError:
+                pass
+
     return {'params': params,
             'action': request.matchdict.get('action'),
             'selectedBook': selectedBook,
-            'recommendedBook': recommendedBook
+            'recommendedBook': recommendedBook,
+            'allRecommendedBooks': allRecommendedBooks
             }
 @view_config(route_name='select_book',renderer='templates/select_book.jinja2')
 def select_book(request):

@@ -43,6 +43,22 @@ p {
   color:red;
 }
 
+.book-box{
+  border-color: black;
+  border: 10px;
+  height: 100px;
+}
+.book-box p{
+  font-size: 0.1em;
+  font-weight: unset;
+}
+.book-box img{
+  alignment: right;
+  height: 50%;
+  width: 50%;
+}
+
+
 .starter-template {
   margin-top: 250px;
 }
