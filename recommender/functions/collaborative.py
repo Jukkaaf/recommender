@@ -1,5 +1,7 @@
 import MySQLdb as mysli
 import numpy as np
+from collections import OrderedDict
+
 
 def collaborativeFiltering(userid, isbn, db):
 
@@ -61,29 +63,32 @@ def collaborativeFiltering(userid, isbn, db):
     coefficients = {}
     for other_user in dictionary:
         coefficient = coef_similarity(rewiews_by_user,dictionary[other_user])
-        print coefficient
+        #print coefficient
         #print dictionary[other_user]
         coefficients[other_user] = coefficient
 
     coefficients = sorted(coefficients.items(), key=lambda x :x[1])
+    #print coefficients
     #Taking the highest rated book a the most similar user
-    highest_rated_isbns = []
+    highest_rated_isbns = OrderedDict()
     number_of_similar_users = len(coefficients)
     #Number of reviews that must be done will be
     limit_of_books = 50
     number_of_books = 0
 
+    #Palauta orderedDict, avain ISBN, arvo paino
+
     if len(coefficients) > 0:
-        for i,similar_user in enumerate(coefficients[0]):
+        for similar_user,coeff in coefficients:
             # going at most half of the similar users
             half_of_users = number_of_similar_users/2
-            if i <= half_of_users and number_of_books <= limit_of_books and similar_user in dictionary:
+            if number_of_books <= limit_of_books and similar_user in dictionary:
                 for ISBN in dictionary[similar_user]:
                     #print ISBN
                     rating = dictionary[similar_user][ISBN]
                     #Checking it is not the same book
                     if rating >= 5 and ISBN != isbn:
-                        highest_rated_isbns.append(ISBN)
+                        highest_rated_isbns[ISBN] = coeff #* coefficient
 
 
     return highest_rated_isbns
@@ -113,17 +118,22 @@ def bookInfo(isbn, db):
 
 def coef_similarity(a_reviews,b_reviews):
 
-    reviews_a = []
-    reviews_b = []
-    common = 0
+    same_reviews_a = []
+    same_reviews_b = []
+    number_of_common_reviews = 0
     for item_a in a_reviews:
         for item_b in b_reviews:
             if item_a == item_b:
-                common += 1
-                reviews_a.append(int(a_reviews[item_a]))
-                reviews_b.append(int(b_reviews[item_b]))
-    #print reviews_a
-    #print reviews_b
-    corr = np.corrcoef(reviews_a,reviews_b)
-    #print corr
-    return corr[1,0]
+                number_of_common_reviews += 1
+                same_reviews_a.append(int(a_reviews[item_a]))
+                same_reviews_b.append(int(b_reviews[item_b]))
+    print same_reviews_a
+    print same_reviews_b
+    corr = np.corrcoef(same_reviews_a,same_reviews_b)[1,0]
+    print corr
+    return corr
+
+def coef_test():
+    same_reviews_a = [1,2,3]
+    same_reviews_b = [0,1,0.5]
+    print np.correlate(same_reviews_a, same_reviews_b)

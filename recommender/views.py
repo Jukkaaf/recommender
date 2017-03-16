@@ -1,6 +1,6 @@
 from pyramid.view import view_config
 from functions.test import testfunction
-from functions.collaborative import collaborativeFiltering, bookInfo
+from functions.collaborative import collaborativeFiltering, bookInfo, coef_test
 from functions.randomi import random_book
 from functions.coldturkey import coldturkey
 from collections import OrderedDict
@@ -19,6 +19,7 @@ def test(request):
 
 @view_config(route_name='collab', renderer='templates/collab.jinja2')
 def collab(request):
+    coef_test()
     settings = request.registry.settings
     db = mysli.connect(settings['mysql.host'], settings['mysql.user'], settings['mysql.password'], settings['mysql.database'])
 
@@ -45,7 +46,7 @@ def collab_filter(request):
     #temp isbn, vaihda result
     recommendedBook = bookInfo("0446310786", db)
     if len(result) > 0:
-        recommendedBook = bookInfo(result[0],db)
+        recommendedBook = bookInfo(result.items()[0][0],db)
 
     #Kaikkien kirjojen palautus
     allRecommendedBooks = OrderedDict()
