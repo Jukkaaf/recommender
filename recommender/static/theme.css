@@ -55,7 +55,7 @@ p {
   max-width: 50%;
 }
 .book-box img{
-  float: right;
+  horizontal-align: right;
   max-width:50%;
   max-height:100%;
 }
