@@ -2,8 +2,21 @@
 
 {% block content%}
 <div class="content">
+    <label for="User-ID">Logged in as user:</label>
+    {#  <input type="text" name="User-ID" value="276747" form="select_book"> #}
+    {%  if users|length > 0 %}
+        <select name="User-ID" form="select_book">
+            {% for user in users %}
+                <option value="{{ user }}">{{ user }}</option>
+            {% endfor %}
+        </select>
+    {% else %}
+        <input type="text" name="User-ID" value="276747" form="select_book">
+    {% endif %}
+
+    </select>
     {% for selectedBook in top_books %}
-        <form method="post" action="{{request.route_path('collab_action', action='filter')}}" >
+        <form id="select_book" method="post" action="{{request.route_path('collab_action', action='filter')}}" >
             <input type="hidden" name="ISBN" value={{top_books[selectedBook]['Book-ISBN']}} >
             <input type="hidden" name="User-ID" value="276747">
             <button class="link-button" value={{top_books[selectedBook]['Book-Title']}}><p>{{top_books[selectedBook]['Book-Title']}}</p></button>

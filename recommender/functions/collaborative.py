@@ -60,7 +60,7 @@ def collaborativeFiltering(userid, isbn, db):
             print err
 
 
-    coefficients = {}
+    coefficients = OrderedDict()
     for other_user in dictionary:
         coefficient = coef_similarity(rewiews_by_user,dictionary[other_user])
         #print coefficient
@@ -89,7 +89,6 @@ def collaborativeFiltering(userid, isbn, db):
                     #Checking it is not the same book
                     if rating >= 5 and ISBN != isbn:
                         highest_rated_isbns[ISBN] = coeff #* coefficient
-
 
     return highest_rated_isbns
 
@@ -138,7 +137,3 @@ def coef_similarity(a_reviews,b_reviews):
     #print correlation
     return correlation
 
-def coef_test():
-    same_reviews_a = [1,2,3]
-    same_reviews_b = [0,1,0.5]
-    print np.correlate(same_reviews_a, same_reviews_b)

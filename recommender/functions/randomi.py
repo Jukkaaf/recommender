@@ -19,3 +19,6 @@ def random_book(db):
 
     return isbn
 
+def pick_users(db):
+    users = [276762,276925,113334,269841,139835]
+    return users

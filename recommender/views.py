@@ -1,7 +1,7 @@
 from pyramid.view import view_config
 from functions.test import testfunction
-from functions.collaborative import collaborativeFiltering, bookInfo, coef_test
-from functions.randomi import random_book
+from functions.collaborative import collaborativeFiltering, bookInfo
+from functions.randomi import random_book,pick_users
 from functions.coldturkey import coldturkey
 from collections import OrderedDict
 import MySQLdb as mysli
@@ -19,7 +19,6 @@ def test(request):
 
 @view_config(route_name='collab', renderer='templates/collab.jinja2')
 def collab(request):
-    coef_test()
     settings = request.registry.settings
     db = mysli.connect(settings['mysql.host'], settings['mysql.user'], settings['mysql.password'], settings['mysql.database'])
 
@@ -48,6 +47,7 @@ def collab_filter(request):
     if len(result) > 0:
         recommendedBook = bookInfo(result.items()[0][0],db)
 
+
     #Kaikkien kirjojen palautus
     allRecommendedBooks = OrderedDict()
     for isbn in result:
@@ -69,11 +69,15 @@ def collab_filter(request):
 def select_book(request):
     parameters = request.POST
 
+
+
     settings = request.registry.settings
     db = mysli.connect(settings['mysql.host'], settings['mysql.user'], settings['mysql.password'],
                        settings['mysql.database'])
     return_all_books = True
     top_books_isbns = coldturkey(db,return_all_books)
+
+    users = pick_users(db)
 
     top_books = {}
     for isbn in top_books_isbns:
@@ -91,4 +95,5 @@ def select_book(request):
 
 
     return{'action': request.matchdict.get('action'),
-           'top_books': top_books}
+           'top_books': top_books,
+           'users': users}
