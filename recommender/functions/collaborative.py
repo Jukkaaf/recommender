@@ -120,12 +120,11 @@ def coef_similarity(a_reviews,b_reviews):
     same_reviews_a = []
     same_reviews_b = []
     number_of_common_reviews = 0
-    for item_a in a_reviews:
-        for item_b in b_reviews:
-            if item_a == item_b:
-                number_of_common_reviews += 1
-                same_reviews_a.append(int(a_reviews[item_a]))
-                same_reviews_b.append(int(b_reviews[item_b]))
+    for item in a_reviews:
+        if item in b_reviews:
+            number_of_common_reviews += 1
+            same_reviews_a.append(int(a_reviews[item]))
+            same_reviews_b.append(int(b_reviews[item]))
     #print same_reviews_a
     #print same_reviews_b
     if number_of_common_reviews > 1:
@@ -136,4 +135,3 @@ def coef_similarity(a_reviews,b_reviews):
         correlation = 0.0
     #print correlation
     return correlation
-
