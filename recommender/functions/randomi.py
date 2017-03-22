@@ -29,6 +29,7 @@ def pick_users(db):
         rows = cursor.fetchall()
         for row in rows:
             users.append(row[0])
+        users = sorted(users)
     except db.Error as err:
         users = [276762, 276925, 113334, 269841, 139835]
     return users

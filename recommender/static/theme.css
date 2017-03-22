@@ -30,17 +30,17 @@ p {
 .link-button{
   background: white;
   border: none;
-  color: blue;
   text-decoration: underline;
   cursor: pointer;
   font-size: 1em;
   font-family: serif;
+  width: 100%;
 }
 .link-button:focus{
   outline: none;
 }
-.link-button:active{
-  color:red;
+.link-button:hover{
+  color: orange;
 }
 
 .book-box{
@@ -58,8 +58,6 @@ p {
   max-width:50%;
   max-height:100%;
 }
-
-
 .starter-template {
   margin-top: 250px;
 }
