@@ -25,7 +25,7 @@ def coldturkey(db,return_all_books = False):
         points[book] = score[book] / ammount[book]
 
     ordcounter = sorted(points, key=points.get, reverse=True)
-    split = int(len(ordcounter) * 0.1)
+    split = int(len(ordcounter) * 0.005)
     top = ordcounter[:split]
 
     if return_all_books:

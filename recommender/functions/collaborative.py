@@ -199,6 +199,10 @@ def collaborativeFiltering_new(userid, isbn, db):
                     if rating >= 0 and ISBN != isbn:
                         number_of_books += 1
                         highest_rated_isbns[ISBN] = coeff*rating #* coefficient
+                        # nan arvot nollaksi
+                        if np.isnan(highest_rated_isbns[ISBN]):
+                            highest_rated_isbns[ISBN] = float(0)
 
     highest_rated_isbns = OrderedDict(sorted(highest_rated_isbns.items(),key=lambda x:x[1],reverse=True))
+    #print highest_rated_isbns
     return highest_rated_isbns

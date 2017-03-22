@@ -16,6 +16,8 @@
 
     </select>
     <form id="select_book" method="post" action="{{request.route_path('collab_action', action='filter')}}" >
+        <input type="checkbox" name="pWeight" />publisher weight<br />
+        <input type="checkbox" name="sWeight" />similarity weight<br />
     {% for selectedBook in top_books %}
         <input type="hidden" name="ISBN" value={{top_books[selectedBook]['Book-ISBN']}} >
         <button class="link-button" value={{top_books[selectedBook]['Book-Title']}}><p>{{top_books[selectedBook]['Book-Title']}}</p></button>

@@ -3,6 +3,7 @@ from functions.test import testfunction
 from functions.collaborative import collaborativeFiltering,collaborativeFiltering_new, bookInfo
 from functions.randomi import random_book,pick_users
 from functions.coldturkey import coldturkey
+from functions.weight import publisherWeight, bookSimilarityWeight
 from collections import OrderedDict
 import MySQLdb as mysli
 
@@ -57,9 +58,22 @@ def collab_filter(request):
         if info:
             try:
                 info['Book-Title'] = info['Book-Title'].encode('utf-8')
+                info['Score'] = result[isbn]
                 allRecommendedBooks[isbn] = info
             except UnicodeDecodeError:
+                print "error with " + str(isbn)
                 pass
+    try:
+        # jos kayttaja haluaa painottaa kirjoja julkaisijan perusteella
+        if params['pWeight']:
+            allRecommendedBooks = publisherWeight(allRecommendedBooks, selectedBook)
+        if params['sWeight']:
+            allRecommendedBooks = bookSimilarityWeight(allRecommendedBooks, selectedBook)
+        # jarjestetaan kirjat uudestaan painotuksien jalkeen
+        allRecommendedBooks = OrderedDict(sorted(allRecommendedBooks.iteritems(), key=lambda x: x[1]['Score'], reverse=True))
+        print allRecommendedBooks
+    except:
+        print "something went wrong"
 
     return {'params': params,
             'action': request.matchdict.get('action'),
