@@ -160,7 +160,8 @@ def collaborativeFiltering_new(userid, isbn, db):
 
 
     #Union of users that have rated the same books and users that have rated the selected book
-    reviews_by_others_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `ISBN` IN( SELECT `ISBN` FROM `BX-Book-Ratings` WHERE `User-ID`=%s) UNION SELECT * FROM `BX-Book-Ratings` WHERE `ISBN`=%s" % (userid,isbn)
+    reviews_by_others_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `ISBN` IN( SELECT `ISBN` FROM `BX-Book-Ratings` WHERE `User-ID`=%s) UNION SELECT * FROM `BX-Book-Ratings` WHERE `ISBN`='%s'" % (userid,isbn)
+
     try:
         cursor.execute(reviews_by_others_sql)
         reviews_by_others = cursor.fetchall()
