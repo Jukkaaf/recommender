@@ -15,13 +15,12 @@
     {% endif %}
 
     </select>
+    <form id="select_book" method="post" action="{{request.route_path('collab_action', action='filter')}}" >
     {% for selectedBook in top_books %}
-        <form id="select_book" method="post" action="{{request.route_path('collab_action', action='filter')}}" >
-            <input type="hidden" name="ISBN" value={{top_books[selectedBook]['Book-ISBN']}} >
-            <input type="hidden" name="User-ID" value="276747">
-            <button class="link-button" value={{top_books[selectedBook]['Book-Title']}}><p>{{top_books[selectedBook]['Book-Title']}}</p></button>
-        </form>
+        <input type="hidden" name="ISBN" value={{top_books[selectedBook]['Book-ISBN']}} >
+        <button class="link-button" value={{top_books[selectedBook]['Book-Title']}}><p>{{top_books[selectedBook]['Book-Title']}}</p></button>
     {% endfor %}
+    </form>
 
 </div>
 

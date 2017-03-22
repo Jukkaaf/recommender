@@ -135,3 +135,69 @@ def coef_similarity(a_reviews,b_reviews):
         correlation = 0.0
     #print correlation
     return correlation
+
+#UUSI FUNKTIO
+def collaborativeFiltering_new(userid, isbn, db):
+    cursor = db.cursor()
+
+    print userid
+
+    #All reviews done by the user
+    rewiews_by_user_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `User-ID`=%s" % userid
+    rewiews_by_user = {}
+    try:
+        cursor.execute(rewiews_by_user_sql)
+        rewiews_by_user_tuple = cursor.fetchall()
+        for row in rewiews_by_user_tuple:
+            book_isbn2 = row[1]
+            rating2 = row[2]
+            rewiews_by_user[book_isbn2] = rating2
+    except mysli.Error as err:
+        print err
+
+    #Finding other users who have rated same books
+    dictionary = dict()
+
+
+    #Union of users that have rated the same books and users that have rated the selected book
+    reviews_by_others_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `ISBN` IN( SELECT `ISBN` FROM `BX-Book-Ratings` WHERE `User-ID`=%s) UNION SELECT * FROM `BX-Book-Ratings` WHERE `ISBN`=%s" % (userid,isbn)
+    try:
+        cursor.execute(reviews_by_others_sql)
+        reviews_by_others = cursor.fetchall()
+        for review in reviews_by_others:
+            other_user = int(review[0])
+            if other_user not in dictionary:
+                dictionary[other_user] = {}
+            book_isbn = review[1]
+            rating = review[2]
+            dictionary[other_user][book_isbn]= rating
+    except mysli.Error as err:
+        print err
+
+    coefficients = OrderedDict()
+    for other_user in dictionary:
+        coefficient = coef_similarity(rewiews_by_user,dictionary[other_user])
+        #print coefficient
+        coefficients[other_user] = coefficient
+
+    #Coefficienttien lajittelu suuruusjarjestykseen
+    coefficients = OrderedDict(sorted(coefficients.items(),key=lambda x:x[1],reverse=True))
+
+    #print coefficients
+    highest_rated_isbns = OrderedDict()
+    number_of_books = 0
+    limit_of_books = 50
+    if len(coefficients) > 1:
+        for similar_user,coeff in coefficients.items():
+            #print similar_user
+            if number_of_books <= limit_of_books and similar_user in dictionary.keys():
+                for ISBN in dictionary[similar_user]:
+                    #print ISBN
+                    rating = dictionary[similar_user][ISBN]
+                    #Checking it is not the same book
+                    if rating >= 0 and ISBN != isbn:
+                        number_of_books += 1
+                        highest_rated_isbns[ISBN] = coeff*rating #* coefficient
+
+    highest_rated_isbns = OrderedDict(sorted(highest_rated_isbns.items(),key=lambda x:x[1],reverse=True))
+    return highest_rated_isbns

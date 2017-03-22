@@ -20,5 +20,15 @@ def random_book(db):
     return isbn
 
 def pick_users(db):
-    users = [276762,276925,113334,269841,139835]
+    cursor = db.cursor()
+    #Ottaa ne kayttajat, jotka ovat arvostelleet eniten
+    select_users_sql = "SELECT `User-ID` as user_id ,COUNT(ISBN) AS amount_of_reviews  FROM `BX-Book-Ratings` GROUP BY user_id ORDER BY amount_of_reviews DESC LIMIT 15"
+    try:
+        cursor.execute(select_users_sql)
+        users = []
+        rows = cursor.fetchall()
+        for row in rows:
+            users.append(row[0])
+    except db.Error as err:
+        users = [276762, 276925, 113334, 269841, 139835]
     return users

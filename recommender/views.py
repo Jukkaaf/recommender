@@ -1,6 +1,6 @@
 from pyramid.view import view_config
 from functions.test import testfunction
-from functions.collaborative import collaborativeFiltering, bookInfo
+from functions.collaborative import collaborativeFiltering,collaborativeFiltering_new, bookInfo
 from functions.randomi import random_book,pick_users
 from functions.coldturkey import coldturkey
 from collections import OrderedDict
@@ -39,14 +39,16 @@ def collab_filter(request):
     settings = request.registry.settings
     db = mysli.connect(settings['mysql.host'], settings['mysql.user'], settings['mysql.password'], settings['mysql.database'])
 
-    result = collaborativeFiltering(params["User-ID"].encode("utf-8"), params["ISBN"].encode("utf-8"), db)
+    #Alkuperainen
+    #result = collaborativeFiltering(params["User-ID"].encode("utf-8"), params["ISBN"].encode("utf-8"), db)
+    #Uusi
+    result = collaborativeFiltering_new(params["User-ID"].encode("utf-8"), params["ISBN"].encode("utf-8"), db)
 
     selectedBook = bookInfo(params["ISBN"].encode("utf-8"), db)
     #temp isbn, vaihda result
     recommendedBook = bookInfo("0446310786", db)
     if len(result) > 0:
         recommendedBook = bookInfo(result.items()[0][0],db)
-
 
     #Kaikkien kirjojen palautus
     allRecommendedBooks = OrderedDict()
