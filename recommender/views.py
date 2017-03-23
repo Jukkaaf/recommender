@@ -46,6 +46,7 @@ def collab_filter(request):
     result = collaborativeFiltering_new(params["User-ID"].encode("utf-8"), params["ISBN"].encode("utf-8"), db)
 
     selectedBook = bookInfo(params["ISBN"].encode("utf-8"), db)
+    selectedBook['ISBN'] = params["ISBN"].encode("utf-8")
     #temp isbn, vaihda result
     recommendedBook = bookInfo("0446310786", db)
     if len(result) > 0:
@@ -59,6 +60,7 @@ def collab_filter(request):
             try:
                 info['Book-Title'] = info['Book-Title'].encode('utf-8')
                 info['Score'] = result[isbn]
+                info['ISBN'] = isbn
                 allRecommendedBooks[isbn] = info
             except UnicodeDecodeError:
                 print "error with " + str(isbn)
@@ -68,10 +70,11 @@ def collab_filter(request):
         if "pWeight" in params:
             allRecommendedBooks = publisherWeight(allRecommendedBooks, selectedBook)
         if "sWeight" in params:
-            allRecommendedBooks = bookSimilarityWeight(allRecommendedBooks, selectedBook)
+            allRecommendedBooks = bookSimilarityWeight(allRecommendedBooks, selectedBook, db)
         # jarjestetaan kirjat uudestaan painotuksien jalkeen
         allRecommendedBooks = OrderedDict(sorted(allRecommendedBooks.iteritems(), key=lambda x: x[1]['Score'], reverse=True))
-        #print allRecommendedBooks
+        #for book in allRecommendedBooks:
+        #    print allRecommendedBooks[book]['ISBN'], allRecommendedBooks[book]['Score']
     except:
         print "something went wrong"
 
