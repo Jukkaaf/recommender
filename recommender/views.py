@@ -65,13 +65,13 @@ def collab_filter(request):
                 pass
     try:
         # jos kayttaja haluaa painottaa kirjoja julkaisijan perusteella
-        if params['pWeight']:
+        if "pWeight" in params:
             allRecommendedBooks = publisherWeight(allRecommendedBooks, selectedBook)
-        if params['sWeight']:
+        if "sWeight" in params:
             allRecommendedBooks = bookSimilarityWeight(allRecommendedBooks, selectedBook)
         # jarjestetaan kirjat uudestaan painotuksien jalkeen
         allRecommendedBooks = OrderedDict(sorted(allRecommendedBooks.iteritems(), key=lambda x: x[1]['Score'], reverse=True))
-        print allRecommendedBooks
+        #print allRecommendedBooks
     except:
         print "something went wrong"
 
