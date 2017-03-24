@@ -17,9 +17,9 @@ def bookSimilarityWeight(recommenderBooks, selectedBook, db):
         cursor.execute(reviews_of_selected_sql)
         reviews_of_selected_tuple = cursor.fetchall()
         for row in reviews_of_selected_tuple:
-            book_isbn2 = row[1]
             rating2 = row[2]
-            reviews_of_selected[book_isbn2] = rating2
+            user_id2 = row[0]
+            reviews_of_selected[user_id2] = rating2
     except mysli.Error as err:
         print err
 
@@ -31,9 +31,9 @@ def bookSimilarityWeight(recommenderBooks, selectedBook, db):
             cursor.execute(reviews_sql)
             reviews_tuple = cursor.fetchall()
             for row in reviews_tuple:
-                book_isbn2 = row[1]
+                user_id2 = row[0]
                 rating2 = row[2]
-                reviews[book_isbn2] = rating2
+                reviews[user_id2] = rating2
 
             # lasketaan similarity
             coefficient = coef_similarity(reviews_of_selected, reviews)
