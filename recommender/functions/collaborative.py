@@ -143,10 +143,10 @@ def collaborativeFiltering_new(userid, isbn, db):
     print userid
 
     #All reviews done by the user
-    rewiews_by_user_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `User-ID`=%s" % userid
+    #rewiews_by_user_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `User-ID`=%s" % userid
     rewiews_by_user = {}
     try:
-        cursor.execute(rewiews_by_user_sql)
+        cursor.execute("SELECT * FROM `BX-Book-Ratings` WHERE `User-ID`=%s", (userid,))
         rewiews_by_user_tuple = cursor.fetchall()
         for row in rewiews_by_user_tuple:
             book_isbn2 = row[1]
@@ -160,10 +160,10 @@ def collaborativeFiltering_new(userid, isbn, db):
 
 
     #Union of users that have rated the same books and users that have rated the selected book
-    reviews_by_others_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `ISBN` IN( SELECT `ISBN` FROM `BX-Book-Ratings` WHERE `User-ID`=%s) UNION SELECT * FROM `BX-Book-Ratings` WHERE `ISBN`='%s'" % (userid,isbn)
+    #reviews_by_others_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `ISBN` IN( SELECT `ISBN` FROM `BX-Book-Ratings` WHERE `User-ID`=%s) UNION SELECT * FROM `BX-Book-Ratings` WHERE `ISBN`='%s'" % (userid,isbn)
 
     try:
-        cursor.execute(reviews_by_others_sql)
+        cursor.execute("SELECT * FROM `BX-Book-Ratings` WHERE `ISBN` IN( SELECT `ISBN` FROM `BX-Book-Ratings` WHERE `User-ID`=%s) UNION SELECT * FROM `BX-Book-Ratings` WHERE `ISBN`=%s", (userid,isbn))
         reviews_by_others = cursor.fetchall()
         for review in reviews_by_others:
             other_user = int(review[0])

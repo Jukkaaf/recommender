@@ -3,7 +3,7 @@ from functions.test import testfunction
 from functions.collaborative import collaborativeFiltering,collaborativeFiltering_new, bookInfo
 from functions.randomi import random_book,pick_users
 from functions.coldturkey import coldturkey
-from functions.weight import publisherWeight, bookSimilarityWeight
+from functions.weight import publisherWeight, bookSimilarityWeight, cosineSimilarity
 from collections import OrderedDict
 import MySQLdb as mysli
 
@@ -87,8 +87,6 @@ def collab_filter(request):
 @view_config(route_name='select_book',renderer='templates/select_book.jinja2')
 def select_book(request):
     parameters = request.POST
-
-
 
     settings = request.registry.settings
     db = mysli.connect(settings['mysql.host'], settings['mysql.user'], settings['mysql.password'],
