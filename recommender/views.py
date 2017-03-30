@@ -109,8 +109,10 @@ def select_book(request):
                 top_books[isbn]['Book-ISBN'] = isbn
             except UnicodeDecodeError:
                 pass
-
+    coldbook = coldturkey(db)
+    coldbookinfo = bookInfo(coldbook, db)
 
     return{'action': request.matchdict.get('action'),
            'top_books': top_books,
-           'users': users}
+           'users': users,
+           'coldbookinfo': coldbookinfo}
