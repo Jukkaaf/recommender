@@ -1,7 +1,7 @@
 {% extends "layout.jinja2" %}
 
 {% block content%}
-<div class="content">
+<br class="content">
     <label for="User-ID">Logged in as user:</label>
     {#  <input type="text" name="User-ID" value="276747" form="select_book"> #}
     {%  if users|length > 0 %}
@@ -29,8 +29,8 @@
 
     </select>
     <form id="select_book" method="post" action="{{request.route_path('collab_action', action='filter')}}" >
-        <input type="checkbox" name="pWeight" />Use publisher info to weight recommendations
-        <input type="checkbox" name="sWeight" />Use book similarity to weight recommendations<br />
+        <input type="checkbox" name="pWeight" /> Use publisher info to weight recommendations<br>
+        <input type="checkbox" name="sWeight" /> Use book similarity to weight recommendations<br>
     {% for selectedBook in top_books %}
         <input type="hidden" name="ISBN" value={{top_books[selectedBook]['Book-ISBN']}} >
         <button class="link-button" value={{top_books[selectedBook]['Book-Title']}}><p>{{top_books[selectedBook]['Book-Title']}}</p></button>
