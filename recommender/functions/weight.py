@@ -52,7 +52,7 @@ def bookSimilarityWeight(recommenderBooks, selectedBook, db):
     except mysli.Error as err:
         print err
 
-    # haetaan arvostelut muille kirjoille ja lasketaan coef similarity
+    # haetaan arvostelut muille kirjoille ja lasketaan cosini similarity
     for book in recommenderBooks:
         reviews_sql = "SELECT * FROM `BX-Book-Ratings` WHERE `ISBN`='%s'" % recommenderBooks[book]['ISBN']
         reviews = {}
@@ -69,9 +69,9 @@ def bookSimilarityWeight(recommenderBooks, selectedBook, db):
             # lasketaan coef_similarity
             #coefficient = coef_similarity(reviews_of_selected, reviews)
             # Lasketaan cosini similarity
-            coefficient = cosineSimilarity(reviews_of_selected, reviews)
+            cos_similarity = cosineSimilarity(reviews_of_selected, reviews)
             # kerrotaan pisteet tuloksella + 1
-            recommenderBooks[book]['Score'] = recommenderBooks[book]['Score'] * float(coefficient + 1.0)
+            recommenderBooks[book]['Score'] = recommenderBooks[book]['Score'] * float(cos_similarity + 1.0)
             #print recommenderBooks[book]['ISBN'], float(coefficient)
         except mysli.Error as err:
             print err

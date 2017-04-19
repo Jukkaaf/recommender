@@ -117,6 +117,11 @@ def bookInfo(isbn, db):
 
 def coef_similarity(a_reviews,b_reviews):
 
+    # Two different users, A and B, have graded the same books,
+    # the grades will be put in the same order in both lists
+    # same_reviews_a = [grade_for_book1, grade_for_book2 ... ]
+    # same_reviews_b = [grade_for_book1, grade_for_book2 ... ]
+
     same_reviews_a = []
     same_reviews_b = []
     number_of_common_reviews = 0
@@ -128,8 +133,12 @@ def coef_similarity(a_reviews,b_reviews):
     #print same_reviews_a
     #print same_reviews_b
     if number_of_common_reviews > 1:
+        # For more than one common review, the correlation is
+        # calculated with corrcoef-function of numpy
         correlation = np.corrcoef(same_reviews_a,same_reviews_b)[1,0]
     elif number_of_common_reviews == 1:
+        # If there is just one common review, then the corrcoef-function cannot produce result
+        # and it is the difference between grades divided by 10
         correlation = 1.0 - ( abs(float(same_reviews_a[0] - same_reviews_b[0]))/10 )
     else:
         correlation = 0.0
@@ -198,7 +207,8 @@ def collaborativeFiltering_new(userid, isbn, db):
                     #Checking it is not the same book
                     if rating >= 0 and ISBN != isbn:
                         number_of_books += 1
-                        highest_rated_isbns[ISBN] = coeff*rating #* coefficient
+                        #The point for the book is the coefficient multiplied by the rating of the book
+                        highest_rated_isbns[ISBN] = coeff*rating #coefficient * rating
                         # nan arvot nollaksi
                         if np.isnan(highest_rated_isbns[ISBN]):
                             highest_rated_isbns[ISBN] = float(0)
