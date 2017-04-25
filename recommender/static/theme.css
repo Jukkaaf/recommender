@@ -29,18 +29,27 @@ p {
 
 .link-button{
   background: white;
-  border: none;
-  text-decoration: underline;
+  border-width: 0px 0px 0px 0px;
+  border-color: black;
+  border-style: solid;
+  text-decoration: none;
   cursor: pointer;
   font-size: 1em;
   font-family: serif;
   width: 100%;
+  margin-bottom: 15px;
 }
 .link-button:focus{
   outline: none;
 }
 .link-button:hover{
   color: orange;
+}
+
+.select-book-img{
+  alignment: center;
+  max-height: 100px;
+  margin-bottom: 20px;
 }
 
 .book-box{

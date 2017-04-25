@@ -1,0 +1,46 @@
+{% extends "layout.jinja2" %}
+
+{% block content%}
+<br class="content">
+    <label for="User-ID">Logged in as user:</label>
+    {#  <input type="text" name="User-ID" value="276747" form="select_book"> #}
+    {%  if users|length > 0 %}
+        <select name="User-ID" form="select_book">
+            {% for user in users %}
+                <option value="{{ user }}">{{ user }}</option>
+            {% endfor %}
+        </select>
+    {% else %}
+        <input type="text" name="User-ID" value="276747" form="select_book">
+    {% endif %}
+
+    <div style="background: white">
+        <h2>Cold start recommendation.</h2>
+        <h3>{{ coldbookinfo['Book-Title'] }}</h3>
+        <img src={{ coldbookinfo['Image-URL-M'] }} alt="bookcover">
+        <p>{{ coldbookinfo['Book-Author'] }}</p>
+        <p>{{ coldbookinfo['Year-Of-Publication'] }}</p>
+        <p>{{ coldbookinfo['Publisher'] }}</p>
+    </div>
+
+    <h2>Select a book</h2>
+    <h3>options:</h3>
+
+
+    </select>
+    <form id="select_book" method="post" action="{{request.route_path('collab_action', action='filter')}}" >
+        <input type="checkbox" name="pWeight" /> Use publisher info to weight recommendations<br>
+        <input type="checkbox" name="sWeight" /> Use book similarity to weight recommendations<br>
+    {% for selectedBook in top_books %}
+        <input type="hidden" name="ISBN" value={{top_books[selectedBook]['Book-ISBN']}} >
+        <button class="link-button" value={{top_books[selectedBook]['Book-Title']}}>
+            <p>{{top_books[selectedBook]['Book-Title']}}</p>
+            <img class="select-book-img" src="{{ top_books[selectedBook]['Image-URL-M'] }}">
+        </button>
+    {% endfor %}
+    </form>
+
+</div>
+
+
+{% endblock content %}

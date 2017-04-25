@@ -84,7 +84,7 @@ def collab_filter(request):
             'recommendedBook': recommendedBook,
             'allRecommendedBooks': allRecommendedBooks
             }
-@view_config(route_name='select_book',renderer='templates/select_book.jinja2')
+@view_config(route_name='select_book',renderer='templates/select_book2.jinja2')
 def select_book(request):
     parameters = request.POST
 
